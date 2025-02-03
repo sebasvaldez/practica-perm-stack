@@ -1,9 +1,13 @@
 import { pool } from "../db.js";
 
+
+
 //los errors los estoy manejando con express-promise-router
 
 export const getAllTasks = async (req, res, next) => {
-  const { rows } = await pool.query("SELECT * FROM task");
+  const { rows } = await pool.query("SELECT * FROM task WHERE user_id= $1", [
+    req.userId,
+  ]);
   console.log(rows);
   res.json(rows);
 };
@@ -26,12 +30,13 @@ export const createTask = async (req, res, next) => {
 
   try {
     const { rows } = await pool.query(
-      "INSERT INTO task (title, description) VALUES ($1, $2) RETURNING *",
-      [title, description]
+      "INSERT INTO task (title, description, user_id) VALUES ($1, $2, $3) RETURNING *",
+      [title, description, req.userId]
     );
 
     res.json(rows[0]);
   } catch (error) {
+    console.log(error.code);
     if (error.code == "23505") {
       return res.status(409).json({
         message: "Ya existe una tarea con este título.",

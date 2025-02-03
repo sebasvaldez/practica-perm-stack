@@ -1,16 +1,21 @@
-import express from 'express';
-import { getProfile, login, logOut, register } from "../controllers/auth.controller.js"
+import Router from "express-promise-router";
 
-const router = express.Router();
+import {
+  getProfile,
+  login,
+  logOut,
+  register,
+} from "../controllers/auth.controller.js";
+import { isAuth } from "../middlewares/auth.middleware.js";
 
-router.post('/login', login);
+const router = Router();
 
+router.post("/login", login);
 
-router.post('/register',register );
+router.post("/register", register);
 
-router.post('/logout', logOut);
+router.post("/logout", logOut);
 
-router.get('/profile', getProfile)
-
+router.get("/profile",isAuth, getProfile);
 
 export default router;

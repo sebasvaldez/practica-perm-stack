@@ -5,13 +5,14 @@
   "type": "module",
   "scripts": {
     "start": "node .",
-    "dev":"node --watch ."
+    "dev": "node --watch ."
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "express": "^4.21.2",
