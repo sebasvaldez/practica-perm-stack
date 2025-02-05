@@ -26,6 +26,7 @@ export const login = async (req, res) => {
   const token = await createAccessToken({ id: rows[0].id });
   res.cookie("token", token, {
     httpOnly: true,
+    secure:true,
     sameSine: "none",
     maxAge: 24 * 60 * 60 * 1000,
   });
@@ -45,13 +46,15 @@ export const register = async (req, res, next) => {
       [name, email, hashPassword, gravatar]
     );
 
-    const token = await createAccessToken({ id: result.rows[0].id });
 
-    res.cookie("token", token, {
-      httpOnly: true,
-      sameSine: "none",
-      maxAge: 24 * 60 * 60 * 1000,
-    });
+    //////esta porcion está comentada porque no quiero que se loguee el usuario al momento de registrarse//////
+    // const token = await createAccessToken({ id: result.rows[0].id });
+
+    // res.cookie("token", token, {
+    //   httpOnly: true,
+    //   sameSine: "none",
+    //   maxAge: 24 * 60 * 60 * 1000,
+    // });
 
     return res.json(result.rows[0]);
   } catch (error) {
