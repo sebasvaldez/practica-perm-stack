@@ -25,9 +25,9 @@ export const login = async (req, res) => {
   }
   const token = await createAccessToken({ id: rows[0].id });
   res.cookie("token", token, {
-    httpOnly: true,
+    httpOnly: false,
     secure:true,
-    sameSine: "none",
+    sameSite: "none",
     maxAge: 24 * 60 * 60 * 1000,
   });
 

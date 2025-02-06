@@ -1,5 +1,6 @@
 import Router from "express-promise-router";
-
+import { validateSchema } from "../middlewares/validate.middleware.js";
+import { registerSchema, loginSchema } from "../schemas/auth.schema.js";
 import {
   getProfile,
   login,
@@ -10,12 +11,12 @@ import { isAuth } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 
-router.post("/login", login);
+router.post("/login", validateSchema(loginSchema), login);
 
-router.post("/register", register);
+router.post("/register", validateSchema(registerSchema), register);
 
 router.post("/logout", logOut);
 
-router.get("/profile",isAuth, getProfile);
+router.get("/profile", isAuth, getProfile);
 
 export default router;

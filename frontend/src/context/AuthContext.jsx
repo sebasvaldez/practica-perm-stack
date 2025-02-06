@@ -1,5 +1,7 @@
-import { createContext, useState } from "react";
-import axios from "axios";
+import { createContext, useState, useEffect } from "react";
+import Cookies from "js-cookie";
+import axios from "../api/axios";
+
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -9,28 +11,59 @@ export const AuthProvider = ({ children }) => {
   const [isAuth, setIsAuth] = useState(false);
 
   const loginUser = async (data) => {
+    try {
+      const response = await axios.post("/login", data);
+      setUser(response.data);
+      setIsAuth(true);
 
-    const response = await axios.post(
-      "http://localhost:4000/api/login",
-      data,
-      {
-        withCredentials: true,
-      }
-    );
-
-    console.log(response.data);
-    setUser(response.data);
-    setIsAuth(true);
-
+      return response.data;
+    } catch (error) {
+      error.response.data.error
+        ? setError(error.response.data.error)
+        : error.response.data.message
+        ? setError([error.response.data.message])
+        : setError("Error desconocido");
+      setIsAuth(false);
+    }
   };
 
-  const registerUser = async (data)=>{
-    const response = await axios.post("http://localhost:4000/api/register", data, {
-        withCredentials: true,
-    })
-    console.log(response.data);
+  const registerUser = async (data) => {
+    try {
+      const response = await axios.post("/register", data);
+      return response.data;
+    } catch (error) {
+      error.response.data.error
+        ? setError(error.response.data.error)
+        : error.response.data.message
+        ? setError([error.response.data.message])
+        : setError("Error desconocido");
+      setIsAuth(false);
+    }
+  };
 
-  }
+  useEffect(() => {
+    setTimeout(() => {
+      setError(null);
+    }, 4000);
+  }, [error]);
+
+  useEffect(() => {
+    if (Cookies.get("token")) {
+      axios
+        .get("/profile")
+        .then((res) => {
+          console.log(res.data);
+          setUser(res.data);
+          setIsAuth(true);
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.log(error);
+          setUser(null);
+          setIsAuth(false);
+        });
+    }
+  }, []);
 
   return (
     <AuthContext.Provider
@@ -40,7 +73,7 @@ export const AuthProvider = ({ children }) => {
         error,
         isAuth,
         loginUser,
-        registerUser
+        registerUser,
       }}
     >
       {children}
