@@ -4,7 +4,8 @@ export * from "./LoginPage"
 export * from "./ProfilePage"
 export * from "./RegisterPage"
 export * from "./TasksPage"
-export * from "./TaskForm"
+export * from "./TaskFormPage"
 export * from "./NotFound"
+
 
 

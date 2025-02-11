@@ -1,3 +1,10 @@
-export const Card = ({ children }) => {
-  return <div className="bg-zinc-900 p-8 rounded-md " style={{width:"500px"}}>{children}</div>;
+export const Card = ({ children, className }) => {
+  return (
+    <div
+      className={`bg-zinc-900 p-8 rounded-md ${className}`}
+      style={{ width: "500px" }}
+    >
+      {children}
+    </div>
+  );
 };

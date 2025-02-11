@@ -1,4 +1,4 @@
-import { Card, Button, Input, Label } from "../components/ui";
+import { Card, Button, Input, Label, Container } from "../components/ui";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../hooks/useAuth";
@@ -21,7 +21,7 @@ export const LoginPage = () => {
   });
 
   return (
-    <div className="h-[calc(100vh-64px)] flex justify-center items-center">
+    <Container className="h-[calc(100vh-7rem)] flex justify-center items-center">
       <Card>
         {error &&
           error.map((err, index) => (
@@ -63,6 +63,6 @@ export const LoginPage = () => {
           </div>
         </form>
       </Card>
-    </div>
+    </Container>
   );
 };

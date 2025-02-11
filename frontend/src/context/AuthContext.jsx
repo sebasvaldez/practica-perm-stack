@@ -41,6 +41,17 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const logOut = async ()=>{
+
+    await axios.post("/logout")
+    setUser(null);
+    setIsAuth(false);
+    Cookies.remove("token");
+    
+  }
+
+
+
   useEffect(() => {
     setTimeout(() => {
       setError(null);
@@ -52,7 +63,6 @@ export const AuthProvider = ({ children }) => {
       axios
         .get("/profile")
         .then((res) => {
-          console.log(res.data);
           setUser(res.data);
           setIsAuth(true);
           setLoading(false);
@@ -74,6 +84,7 @@ export const AuthProvider = ({ children }) => {
         isAuth,
         loginUser,
         registerUser,
+        logOut
       }}
     >
       {children}
