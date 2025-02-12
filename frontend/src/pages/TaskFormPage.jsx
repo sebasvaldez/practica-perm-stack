@@ -5,14 +5,14 @@ import { useState, useEffect } from "react";
 import { useTasks } from "../hooks/useTasks";
 
 export const TaskFormPage = () => {
-  const [postError, setPostError] = useState([]);
-
   const navigate = useNavigate();
 
-  const { createTask, loadTask  } = useTasks();
+  const { createTask, loadTask, error, updateTask } = useTasks();
+
+  console.log(error);
 
   const params = useParams();
-  console.log(params)
+  console.log(params);
 
   const {
     register,
@@ -22,32 +22,39 @@ export const TaskFormPage = () => {
   } = useForm();
 
   const onSubmit = handleSubmit(async (data) => {
-    const newTask = await createTask(data);
-    if (newTask) {
+    let task;
+    if (!params.id) {
+      task = await createTask(data);
+    } else {
+      task = await updateTask(params.id, data);
+    }
+    if (task) {
       navigate("/tasks");
     }
   });
 
- 
-
-
-
   useEffect(() => {
-    if(params.id){
-      loadTask(params.id).then((data)=>{setValue("title", data.title); setValue("description", data.description)})
+    if (params.id) {
+      loadTask(params.id).then((data) => {
+        setValue("title", data.title);
+        setValue("description", data.description);
+      });
     }
-  
-   
-  }, [])
-  
+  }, []);
 
   return (
     <div className="flex justify-center items-center h-[calc(100vh-9rem)]">
       <Card>
-        {postError.length > 0 && (
-          <div className="text-red-500 text-center">{postError}</div>
+        {error.length > 0 && (
+          <div className=" p-4 my-4 text-red-500">
+            {error.map((err, index) => (
+              <div key={index}>{err}</div>
+            ))}
+          </div>
         )}
-        <h2 className="text-3xl font-bold my-4">{params.id? "Editar tarea": "Crear tarea"}</h2>
+        <h2 className="text-3xl font-bold my-4">
+          {params.id ? "Editar tarea" : "Crear tarea"}
+        </h2>
         <form onSubmit={onSubmit}>
           <Label htmlFor="title">Título</Label>
           <Input
@@ -68,7 +75,7 @@ export const TaskFormPage = () => {
             </span>
           )}
 
-          <Button>{params.id? "Editar":"Crear"}</Button>
+          <Button>{params.id ? "Editar" : "Crear"}</Button>
         </form>
       </Card>
     </div>

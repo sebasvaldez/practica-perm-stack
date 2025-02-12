@@ -52,7 +52,7 @@ export const LoginPage = () => {
             {...register("password", { required: true })}
           />
 
-          <Button className="w-full" type="submit">
+          <Button  type="submit">
             Ingresar
           </Button>
           <div className="flex justify-between my-3">

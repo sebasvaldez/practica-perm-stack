@@ -4,6 +4,7 @@ import {
   deleteTaskRequest,
   createTaskRequest,
   getTaskRequest,
+  updateTaskRequest,
 } from "../api/tasks.api";
 
 export const TaskContext = createContext();
@@ -26,13 +27,10 @@ export const TaskProvider = ({ children }) => {
     console.log(resp);
   };
 
-  const loadTask = async (id)=>{
+  const loadTask = async (id) => {
     const resp = await getTaskRequest(id);
     return resp.data;
-  }
-
-
-
+  };
 
   const createTask = async (task) => {
     try {
@@ -42,13 +40,41 @@ export const TaskProvider = ({ children }) => {
       return resp.data;
     } catch (error) {
       if (error.response) {
-        setError([error.response.data.message]);
+        setError([error.response.data.error]);
       }
     }
   };
 
+  const updateTask = async (id, task) => {
+    try {
+      const resp = await updateTaskRequest(id, task);
+      return resp.data;
+    } catch (error) {
+      if(error.response){
+        setError([error.response.data.error]);
+      }
+    }
+  };
+
+  useEffect(() => {
+    setTimeout(() => {
+      setError([]);
+    }, 4000);
+  }, []);
+
+
   return (
-    <TaskContext.Provider value={{ tasks, loadTasks, deleteTask, createTask, loadTask }}>
+    <TaskContext.Provider
+      value={{
+        tasks,
+        error,
+        loadTasks,
+        deleteTask,
+        createTask,
+        loadTask,
+        updateTask,
+      }}
+    >
       {children}
     </TaskContext.Provider>
   );
